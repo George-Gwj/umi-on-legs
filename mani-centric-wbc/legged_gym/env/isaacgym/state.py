@@ -73,6 +73,10 @@ class EnvState:
 
     @property
     def local_root_gravity(self) -> torch.Tensor:
+        # print("****************")
+        # print(self.gravity)
+        # print(torch.linalg.norm(self.gravity, dim=1, keepdims=True))
+        # print(self.gravity / torch.linalg.norm(self.gravity, dim=1, keepdims=True))
         return quat_rotate_inverse(
             self.root_xyzw_quat,
             self.gravity / torch.linalg.norm(self.gravity, dim=1, keepdims=True),
@@ -161,7 +165,7 @@ class EnvState:
         env_count = gym.get_env_count(sim)
         num_actors_per_env = gym.get_actor_count(gym.get_env(sim, 0))
         num_rigid_bodies = gym.get_env_rigid_body_count(gym.get_env(sim, 0))
-        assert num_actors_per_env == 1, "Only one actor per env is supported. "
+        # assert num_actors_per_env == 1, "Only one actor per env is supported. "
         num_dof = gym.get_env_dof_count(gym.get_env(sim, 0))
 
         dof_states = (
@@ -173,6 +177,7 @@ class EnvState:
             device
         )
         assert root_states.shape == (env_count * num_actors_per_env, 13)
+
         rigid_body_state_tensor = (
             gymtorch.wrap_tensor(gym.acquire_rigid_body_state_tensor(sim))
             .to(device)

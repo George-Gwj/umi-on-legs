@@ -1,0 +1,67 @@
+<mujoco model="piper_description">
+  <compiler angle="radian" meshdir="/home/george/code/umi-on-legs/mani-centric-wbc/resources/robots/piper_description/meshes/"/>
+
+  <asset>
+    <mesh name="base_link" file="base_link.STL"/>
+    <mesh name="link1" file="link1.STL"/>
+    <mesh name="link2" file="link2.STL"/>
+    <mesh name="link3" file="link3.STL"/>
+    <mesh name="link4" file="link4.STL"/>
+    <mesh name="link5" file="link5.STL"/>
+    <mesh name="link6" file="link6.STL"/>
+    <mesh name="one_piece_wide_grasp_finray_finger" file="one_piece_wide_grasp_finray_finger.obj"/>
+    <mesh name="collider" file="collider.obj"/>
+  </asset>
+
+  <worldbody>
+    <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.792157 0.819608 0.933333 1" mesh="base_link"/>
+    <geom type="mesh" rgba="0.792157 0.819608 0.933333 1" mesh="base_link"/>
+    <body name="link1" pos="0 0 0.123" quat="0.707105 0 0 -0.707108">
+      <inertial pos="0.00131676 0.000310289 -0.00922875" quat="0.557105 0.432155 0.377373 0.600388" mass="0.097868" diaginertia="9.25942e-05 8.3083e-05 7.69469e-05"/>
+      <joint name="joint1" pos="0 0 0" axis="0 0 1" range="-2.618 2.618" actuatorfrcrange="-100 100"/>
+      <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.792157 0.819608 0.933333 1" mesh="link1"/>
+      <geom type="mesh" rgba="0.792157 0.819608 0.933333 1" mesh="link1"/>
+      <body name="link2" quat="0.499998 0.5 -0.500002 -0.5">
+        <inertial pos="0.148794 -0.00242027 0.00175155" quat="-0.0249063 0.70684 0.00803509 0.706889" mass="0.290889" diaginertia="0.00177549 0.00173142 0.00014552"/>
+        <joint name="joint2" pos="0 0 0" axis="0 0 1" range="0 3.14" actuatorfrcrange="-100 100"/>
+        <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.792157 0.819608 0.933333 1" mesh="link2"/>
+        <geom type="mesh" rgba="0.792157 0.819608 0.933333 1" mesh="link2"/>
+        <body name="link3" pos="0.28358 0.028726 0" quat="0.998726 0 0 0.0504536">
+          <inertial pos="-0.0996835 0.0349477 0.000508026" quat="0.0777021 0.702287 -0.0990541 0.700674" mass="0.290848" diaginertia="0.000241946 0.000222224 0.000100384"/>
+          <joint name="joint3" pos="0 0 0" axis="0 0 1" range="-2.697 0" actuatorfrcrange="-100 100"/>
+          <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.792157 0.819608 0.933333 1" mesh="link3"/>
+          <geom type="mesh" rgba="0.792157 0.819608 0.933333 1" mesh="link3"/>
+          <body name="link4" pos="-0.24221 0.068514 0" quat="0.544767 -0.544769 -0.450809 0.450808">
+            <inertial pos="0.000276465 -0.00102804 -0.00472831" quat="0.492305 0.505285 0.503294 0.499017" mass="0.127087" diaginertia="4.87057e-05 4.10595e-05 3.82001e-05"/>
+            <joint name="joint4" pos="0 0 0" axis="0 0 1" range="-1.832 1.832" actuatorfrcrange="-100 100"/>
+            <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.792157 0.819608 0.933333 1" mesh="link4"/>
+            <geom type="mesh" rgba="0.792157 0.819608 0.933333 1" mesh="link4"/>
+            <body name="link5" quat="0.707105 0.707108 0 0">
+              <inertial pos="8.82262e-05 0.0566829 -0.0019612" quat="0.507447 0.490986 0.506887 0.494466" mass="0.144711" diaginertia="5.63237e-05 4.88652e-05 4.39642e-05"/>
+              <joint name="joint5" pos="0 0 0" axis="0 0 1" range="-1.22 1.22" actuatorfrcrange="-100 100"/>
+              <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.792157 0.819608 0.933333 1" mesh="link5"/>
+              <geom type="mesh" rgba="0.792157 0.819608 0.933333 1" mesh="link5"/>
+              <body name="link6" pos="0 0.091 0.0014165" quat="0.499998 -0.5 -0.5 -0.500002">
+                <inertial pos="0.0010312 0.0121761 0.0315481" quat="0.0230402 0.707091 0.0373344 0.70576" mass="0.195187" diaginertia="0.000154294 0.000125965 6.43536e-05"/>
+                <joint name="joint6" pos="0 0 0" axis="0 0 1" range="-3.14 3.14" actuatorfrcrange="-100 100"/>
+                <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.792157 0.819608 0.933333 1" mesh="link6"/>
+                <geom type="mesh" rgba="0.792157 0.819608 0.933333 1" mesh="link6"/>
+                <body name="link7" quat="0.500398 -0.5 -0.5 -0.499602">
+                  <inertial pos="0.0543528 -0.00734005 0.018812" quat="0.392035 0.580092 0.313638 0.64143" mass="0.902" diaginertia="0.00627033 0.00505361 0.00224232"/>
+                  <joint name="joint7" pos="0 0 0" axis="1 0 0" range="-1.5708 1.5708" actuatorfrcrange="-30 30"/>
+                  <geom size="0.017 0.0355 0.0275" pos="0.016 -0.02 0.085" type="box" contype="0" conaffinity="0" group="1" density="0"/>
+                  <geom size="0.017 0.0355 0.0275" pos="0.016 -0.02 0.085" type="box"/>
+                  <geom pos="0.072 -0.002 0" quat="0.5 -0.5 0.5 0.5" type="mesh" contype="0" conaffinity="0" group="1" density="0" mesh="one_piece_wide_grasp_finray_finger"/>
+                  <geom pos="0.072 -0.002 0" quat="0.707107 0 0.707107 0" type="mesh" mesh="collider"/>
+                  <geom pos="0.072 0.002 0" quat="0.5 0.5 -0.5 0.5" type="mesh" contype="0" conaffinity="0" group="1" density="0" mesh="one_piece_wide_grasp_finray_finger"/>
+                  <geom pos="0.072 0.002 0" quat="0 0.707107 0 0.707107" type="mesh" mesh="collider"/>
+                  <geom size="0.01" pos="0.22 0 0" quat="0.5 -0.5 0.5 -0.5" contype="0" conaffinity="0" group="1" density="0"/>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+</mujoco>

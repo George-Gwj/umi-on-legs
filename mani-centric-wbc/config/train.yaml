@@ -1,7 +1,7 @@
 defaults:
   - common
   - wandb
-  - env: combo_go2ARX5_pickle_reaching_extreme
+  - env: combo_aliengoLerobot_pickle_reaching_extreme
   - runner: on_policy_runner
   - _self_
 

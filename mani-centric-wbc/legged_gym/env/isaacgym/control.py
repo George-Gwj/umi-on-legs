@@ -137,10 +137,15 @@ class PositionController(PDController):
         curr_vel = state.dof_vel.clone()
         assert normalized_action.shape == curr_pos.shape
         assert curr_vel.shape == curr_pos.shape
+
         if normalized_action.shape[0] != self.kp.shape[0]:
             self.kp = self.kp.repeat(normalized_action.shape[0], 1)
             self.kd = self.kd.repeat(normalized_action.shape[0], 1)
+        
+
         torques = self.kp * (normalized_action - curr_pos) - self.kd * curr_vel
+        # print("self.kp",self.kp)
+        # print("self.kd",self.kd)
         return super().compute_torque(torques, state)
 
 
@@ -164,6 +169,23 @@ class PositionControllerWithExtraFixedAction(PositionController):
             ),
             dim=1,
         )
+        return super().__call__(action, state)
+    
+class PositionControllerWithExtraFixedActionRobot(PositionController):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def __call__(
+        self,
+        action: torch.Tensor,
+        state: EnvState,
+    ):
+        """
+        action: (num_envs, control_dim) from the network
+        """
+        # Aliengo的前12个关节是固定的
+        action[:,:12] = 0
+
         return super().__call__(action, state)
 
 

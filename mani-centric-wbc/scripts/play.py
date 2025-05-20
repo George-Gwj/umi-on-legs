@@ -87,7 +87,11 @@ def play():
         "file_path"
     ] = args.trajectory_file_path
 
+
     config["env"]["constraints"] = {}
+
+    # config["env"]["cfg"]["asset"]["fix_base_link"] = True
+    # config["env"]["cfg"]["init_state"]["pos"] = [-0.5, 0, 0.6]
 
     setup(config, seed=config["seed"])  # type: ignore
 
@@ -134,17 +138,60 @@ def play():
         finally:
             pass
 
+
     obs, privileged_obs = env.reset()
+    # print("obs.size",obs.size())
+    # print("obs",obs)
 
     if args.visualize:
         env.render()  # render once to initialize viewer
 
+    flag = 0
+    index = 0
+    obs_list = []
+    actions_list = []
+    torques_list = []
+    tasks_list = []
     if args.num_steps == -1:
         with torch.inference_mode():
             while True:
                 actions = policy(obs)
-                obs = env.step(actions)[0]
-                update_cam_pos()
+                obs = env.step(actions)[0] 
+                
+                if index < 500:
+                    obs_list.append(obs)
+                    # tasks_list.append(env.global_reaching_tasks)
+                    # actions_list.append(actions)
+                    # tasks_list.append(env.global_reaching_tasks[0])
+                    # tasks_list.append(env.global_reaching_tasks[1])
+                    # tasks_list.append(env.global_reaching_tasks[2])
+                    # tasks_list.append(env.global_reaching_tasks[3])
+                    index += 1
+                else:
+                    obs_history = torch.stack(obs_list)
+                    # actions_history = torch.stack(actions_list)
+                    # torques_list = torch.stack(torques_list)
+                    with open("obs_history.pkl", "wb") as f:
+                        pickle.dump(obs_history, f)
+                        print('变量已保存')
+                        print('tasks_history',obs_history.shape)
+                
+                # env.torqueList = []
+
+                # print("*******")
+                # print("obs",obs)
+                # print("action",actions)
+
+                
+                
+                # print("dof_vel",obs[0,18:36])
+                # print("ang_vel",obs[0,39:42])
+                # print("local_root_gravity_obs",obs[0,36:39])
+                # if flag < 10:
+                #     print("obs",obs[0,:42])
+                #     flag += 1
+                
+                # update_cam_pos()
                 env.render()
 
     state_logs = {
@@ -171,6 +218,7 @@ def play():
     }
     episode_logs = {}
     task = list(env.tasks.values())[0]
+    print("task",task)
     with imageio.get_writer(
         uri=os.path.join(wandb.run.dir, "video.mp4"), mode="I", fps=24
     ) as writer, torch.inference_mode():

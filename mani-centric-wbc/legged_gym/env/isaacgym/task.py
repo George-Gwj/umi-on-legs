@@ -10,6 +10,7 @@ import torch
 from isaacgym import gymapi, gymutil
 from isaacgym.torch_utils import quat_rotate_inverse
 from matplotlib import pyplot as plt
+import pickle
 
 from legged_gym.env.isaacgym.control import Control
 from legged_gym.env.isaacgym.pose_sequence import SequenceSampler
@@ -260,9 +261,14 @@ class Link2DVelocity(Link3DVelocity):
         return obs
 
     def get_lin_vel_err(self, state: EnvState):
+        # print("target_lin_vel", self.target_lin_vel[:, :2])
+        # print("get_link_local_lin_vel", self.get_link_local_lin_vel(state=state)[:, :2])
+        # print("reward", (self.target_lin_vel[:, :2] - self.get_link_local_lin_vel(state=state)[:, :2]).norm(dim=-1))
+        # print("")
         return (
             self.target_lin_vel[:, :2] - self.get_link_local_lin_vel(state=state)[:, :2]
         ).norm(dim=-1)
+
 
     def get_ang_vel_err(self, state: EnvState):
         return (
@@ -284,6 +290,8 @@ class Link6DVelocity(Link2DVelocity):
         pitch_range: Tuple[float, float],
         gravity_sigma: float,
         gravity_reward_scale: float,
+        # user_target_lin_vel: Tuple[float, float, float],
+        # user_target_ang_vel: Tuple[float, float, float],
         **kwargs,
     ):
         super().__init__(
@@ -302,6 +310,9 @@ class Link6DVelocity(Link2DVelocity):
         self.gravity_reward_scale = gravity_reward_scale
         self.target_z_height = torch.zeros((self.num_envs,), device=self.device)
         self.target_local_gravity = torch.zeros((self.num_envs, 3), device=self.device)
+
+        # self.user_target_lin_vel = user_target_lin_vel
+        # self.user_target_ang_vel = user_target_ang_vel
 
     def resample_commands(self, env_ids: torch.Tensor):
         if len(env_ids) == 0:
@@ -328,6 +339,24 @@ class Link6DVelocity(Link2DVelocity):
             device=self.device,
             generator=self.generator,
         )
+        
+        # # 指定target lin vel 和 target ang vel
+        # if(self.user_target_lin_vel == [0.0, 0.0, 0.0]):
+        #     # print("user_target_lin_vel is", self.user_target_lin_vel)
+        #     pass
+        # else:
+        #     lin_vel = torch.zeros_like(self.target_lin_vel)
+        #     lin_vel[env_ids, :] = torch.tensor(self.user_target_lin_vel, device=self.device).expand(len(env_ids), 3)
+        #     self.target_lin_vel = lin_vel
+
+        # if(self.user_target_ang_vel == [0.0, 0.0, 0.0]):
+        #     # print("user_target_ang_vel is", self.user_target_ang_vel)
+        #     pass
+        # else:
+        #     ang_vel = torch.zeros_like(self.target_ang_vel)
+        #     ang_vel[env_ids, :] = torch.tensor(self.user_target_ang_vel, device=self.device).expand(len(env_ids), 3)
+        #     self.target_ang_vel = ang_vel
+
         # convert to gravity vector with trigonometry
         self.target_local_gravity[env_ids, 0] = torch.tan(roll)
         self.target_local_gravity[env_ids, 1] = torch.tan(pitch)
@@ -341,6 +370,7 @@ class Link6DVelocity(Link2DVelocity):
         return stats
 
     def observe(self, state: EnvState) -> torch.Tensor:
+
         return torch.cat(
             [
                 super().observe(state=state),
@@ -357,6 +387,8 @@ class Link6DVelocity(Link2DVelocity):
             - state.measured_terrain_heights,
             dim=1,
         )
+        # print("link_height", link_height)
+        # print("self.target_z_height", self.target_z_height)
         return torch.square(self.target_z_height - link_height)
 
     def get_gravity_err(self, state: EnvState):
@@ -373,6 +405,7 @@ class Link6DVelocity(Link2DVelocity):
             torch.exp(-self.get_z_height_err(state=state) / self.z_height_sigma)
             * self.z_height_reward_scale
         )
+        # print("z_height reward",stats["z_height"])
         stats["gravity"] = (
             torch.exp(-self.get_gravity_err(state=state) / self.gravity_sigma)
             * self.gravity_reward_scale
@@ -473,7 +506,6 @@ class ReachingLinkTask(Task):
         self.curr_target_rot_mat = torch.zeros(
             (self.num_envs, 3, 3), device=self.device
         )
-
         self.target_pos_seq = torch.zeros(
             (self.num_envs, sequence_sampler.episode_length, 3),
             device=self.storage_device,
@@ -574,6 +606,7 @@ class ReachingLinkTask(Task):
         self.position_noise = position_noise
         self.euler_noise = euler_noise
 
+
     def reset_idx(self, env_ids: torch.Tensor):
         if len(env_ids) == 0:
             return
@@ -654,6 +687,9 @@ class ReachingLinkTask(Task):
         times: torch.Tensor,
         sim_dt: float,
     ):
+
+        # print("task_orn_seq", task_orn_seq)
+        # print("self.target_rot_mat_seq",self.target_rot_mat_seq)
         episode_step = torch.clamp(
             # (torch.zeros_like(times) / sim_dt).long(),
             (times / sim_dt).long(),
@@ -663,6 +699,7 @@ class ReachingLinkTask(Task):
         episode_step = torch.clamp(
             episode_step, min=0, max=self.target_pos_seq.shape[1] - 1
         ).to(self.storage_device)
+
         env_idx = torch.arange(0, self.num_envs)
         return (
             self.target_pos_seq[env_idx, episode_step].to(self.device),
@@ -694,7 +731,8 @@ class ReachingLinkTask(Task):
         self.root_pose_history = torch.cat(
             [
                 self.root_pose_history[:, 1:],
-                state.root_pose.clone().unsqueeze(1),
+                # state.root_pose.clone().unsqueeze(1),
+                state.root_pose.clone().unsqueeze(1)[::2],  # shape: [64, 1, 4, 4]
             ],
             dim=1,
         )
@@ -791,7 +829,19 @@ class ReachingLinkTask(Task):
             else 1.0
         )
 
+    def get_target_pose_selfDefine(self, times: torch.Tensor, sim_dt: float,pos,rot_mat):
+        # returns the current target pose in the local frame of the robot
+        target_pose = (
+            torch.eye(4, device=self.device).unsqueeze(0).repeat(self.num_envs, 1, 1)
+        )
+
+        # pos, rot_mat = self.get_targets_at_times(times=times, sim_dt=sim_dt)
+        target_pose[..., :3, 3] = pos
+        target_pose[..., :3, :3] = rot_mat
+        return target_pose
+
     def observe(self, state: EnvState) -> torch.Tensor:
+
         global_target_pose = torch.stack(
             [
                 self.get_target_pose(
@@ -802,10 +852,35 @@ class ReachingLinkTask(Task):
             ],
             dim=1,
         )  # (num_envs, num_obs, 4, 4)
+
+        # global_target_pose = torch.stack(
+        #     [
+        #         self.get_target_pose_selfDefine(
+        #             times=state.episode_time + t_offset,
+        #             sim_dt=state.sim_dt,
+        #             pos=torch.Tensor([(state.episode_time + t_offset)*0.05,0,0.5]).to('cuda:0'),
+        #             rot_mat=torch.Tensor([[0, 0, 1],
+        #                              [-1, 0, 0],
+        #                              [0, -1, 0]]).to('cuda:0')
+        #         )
+        #         for t_offset in self.target_obs_times
+        #     ],
+        #     dim=1,
+        # )
+
+
+
+
+        # print("************************************")
+        
+        # if state.episode_time<0.2:
+        #     print("state.episode_time",state.episode_time)
+        #     print("global_target_pose",global_target_pose)
         # get the most outdated pose, to account for latency
         latency_idx = int(
             np.rint(self.get_latency_scheduler() * self.pose_latency_frames)
         )  # number of frames to wait
+
         if self.pose_latency_frame_variability is not None:
             latency_idx += int(
                 torch.randint(
@@ -820,11 +895,15 @@ class ReachingLinkTask(Task):
             )
         # min is 1, since this index is negated to access last `latency_idx`th frame
         latency_idx = max(1, min(latency_idx, self.pose_latency_frames - 1))
+
+        # print("latency_idx",latency_idx)
+
         observation_link_pose = (
             self.root_pose_history[:, -latency_idx]
             if self.target_relative_to_base
             else self.link_pose_history[:, -latency_idx]
         ).clone()  # (num_envs, 4, 4), clone otherwise sim state will be modified
+
         if self.position_noise > 0 or self.euler_noise > 0:
             noise_transform = torch.zeros((self.num_envs, 4, 4), device=self.device)
             noise_transform[..., [0, 1, 2, 3], [0, 1, 2, 3]] = 1.0
@@ -842,9 +921,18 @@ class ReachingLinkTask(Task):
                     euler_noise, convention="XYZ"
                 )
             observation_link_pose = noise_transform @ observation_link_pose
+
+
         local_target_pose = (
             torch.linalg.inv(observation_link_pose[:, None, :, :]) @ global_target_pose
         )
+        # if state.episode_time < 1.0:
+        #     print("state.episode_time",state.episode_time)
+        #     print("local_target_pose",local_target_pose)
+        # print("observation_link_pose[:, None, :, :]")
+        # print(observation_link_pose[:, None, :, :])
+
+
         if self.position_obs_encoding == "linear":
             pos_obs = (local_target_pose[..., :3, 3] * self.pos_obs_scale).view(
                 self.num_envs, -1
@@ -875,6 +963,9 @@ class ReachingLinkTask(Task):
             pt3d.matrix_to_rotation_6d(local_target_pose[..., :3, :3])
             * self.orn_obs_scale
         ).view(self.num_envs, -1)
+
+        # print("pos_obs  ",pos_obs)
+        # print('orn_obs  ',orn_obs)
 
         relative_pose_obs = torch.cat((pos_obs, orn_obs), dim=1)
         # NOTE after episode resetting, the first pose will be outdated

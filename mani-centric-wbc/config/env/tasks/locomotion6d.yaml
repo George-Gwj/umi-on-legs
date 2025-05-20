@@ -9,10 +9,19 @@ z_height_range:
 z_height_sigma: 0.01
 z_height_reward_scale: 0.5
 roll_range:
-  - -0.3
-  - 0.3
+  - -0.1
+  - 0.1
 pitch_range:
-  - -0.3
-  - 0.3
+  - -0.1
+  - 0.1
 gravity_sigma: 0.05
 gravity_reward_scale: 0.5
+
+# user_target_lin_vel:
+#   - 0.0
+#   - 0.0
+#   - 0.0
+# user_target_ang_vel:
+#   - 0.0
+#   - 0.0
+#   - 0.0

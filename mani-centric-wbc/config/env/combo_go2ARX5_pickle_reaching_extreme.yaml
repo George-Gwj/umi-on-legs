@@ -2,7 +2,7 @@ defaults:
   - combo_go2ARX5_pickle_reaching
   - _self_
 cfg:
-  init_state:
+  :
     pos_noise:
       - 0.1
       - 0.1

@@ -1,11 +1,11 @@
 defaults:
   - cfg/rewards: default
 
-headless: true
+headless: false
 seed: ???
-sim_device: ???
+sim_device: cuda:0
 vis_resolution: ???
-graphics_device_id: null # same as sim device
+graphics_device_id: 0 # same as sim device
 _target_: legged_gym.env.isaacgym.env.IsaacGymEnv
 dof_pos_reset_range_scale: 0.05 # 0.2 large
 env_spacing: 3.
@@ -58,7 +58,7 @@ cfg:
     num_observations: ${eval:"sum(int(v['dim']) for v in ${env.state_obs}.values() if 'dim' in v) + sum([int(v['dim']) for v in ${env.setup_obs}.values() if 'dim' in v]) + sum(int(v['obs_dim']) for v in ${env.tasks}.values() if 'obs_dim' in v) + ${env.controller.control_dim}"}
     num_privileged_obs: ???
     num_actions: ???
-    num_envs: 4096
+    num_envs: 512
     episode_length_s: 10.0
     send_timeouts: true
 

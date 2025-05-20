@@ -1,0 +1,322 @@
+<mujoco model="go1">
+  <compiler angle="radian" meshdir="assets" autolimits="true"/>
+
+  <option cone="elliptic" impratio="100"/>
+
+  <default>
+    <motor ctrllimited="true" ctrlrange="-1.0 1.0"/>
+    <default class="go1">
+      <geom friction="0.6" margin="0.001" condim="1"/>
+      <joint axis="0 1 0" damping="2" armature="0.01" frictionloss="0.2"/>
+      <motor ctrllimited="true" ctrlrange="-35 35"/>
+      <position kp="100" forcerange="-23.7 23.7"/>
+      <default class="abduction">
+        <joint axis="1 0 0" damping="1" range="-0.863 0.863"/>
+        <position ctrlrange="-0.863 0.863"/>
+      </default>
+      <default class="hip">
+        <joint range="-0.686 4.501"/>
+        <position ctrlrange="-0.686 4.501"/>
+      </default>
+      <default class="knee">
+        <joint range="-2.818 -0.888"/>
+        <position forcerange="-35.55 35.55" ctrlrange="-2.818 -0.888"/>
+      </default>
+      <default class="visual">
+        <geom type="mesh" contype="0" conaffinity="0" group="2" material="dark"/>
+      </default>
+      <default class="collision">
+        <geom group="3" type="capsule"/>
+        <default class="hip_left1">
+          <geom size="0.046 0.02" pos="0 0.045 0" quat="1 1 0 0" type="cylinder"/>
+        </default>
+        <default class="hip_left2">
+          <geom size="0.031 0.02" pos="0 0.065 0" quat="1 1 0 0" type="cylinder"/>
+        </default>
+        <default class="hip_left3">
+          <geom size="0.046 0.02" quat="1 1 0 0" type="cylinder"/>
+        </default>
+        <default class="hip_right1">
+          <geom size="0.046 0.02" pos="0 -0.045 0" quat="1 1 0 0" type="cylinder"/>
+        </default>
+        <default class="hip_right2">
+          <geom size="0.031 0.02" pos="0 -0.065 0" quat="1 1 0 0" type="cylinder"/>
+        </default>
+        <default class="hip_right3">
+          <geom size="0.046 0.02" quat="1 1 0 0" type="cylinder"/>
+        </default>
+        <default class="thigh1">
+          <geom size="0.015" fromto="-0.02 0 0 -0.02 0 -0.16"/>
+        </default>
+        <default class="thigh2">
+          <geom size="0.015" fromto="0 0 0 -0.02 0 -0.1"/>
+        </default>
+        <default class="thigh3">
+          <geom size="0.015" fromto="-0.02 0 -0.16 0 0 -0.2"/>
+        </default>
+        <default class="calf1">
+          <geom size="0.01" fromto="0 0 0 0.02 0 -0.13"/>
+        </default>
+        <default class="calf2">
+          <geom size="0.01" fromto="0.02 0 -0.13 0 0 -0.2"/>
+        </default>
+        <default class="foot">
+          <!-- https://mujoco.readthedocs.io/en/stable/XMLreference.html#body-geom-friction:~:text=over%20the%20material.-,friction,-%3A%20real(3 -->
+          <geom type="sphere" size="0.023" pos="0 0 -0.213" priority="1" solimp="0.015 1 0.031" condim="6"
+            friction="2.0 0.02 0.01"/>
+        </default>
+      </default>
+    </default>
+    <default class="aliengo">
+        <joint limited="true" damping="2.0" armature="0.01" frictionloss="0.5" range="-1.57 1.57"/>
+        <geom contype="1" conaffinity="0" condim="4" margin="0.001" solref=".02 1" solimp=".8 .9 .01" group="4" rgba=".4 .5 .6 1"/>
+        <position ctrllimited="true"/>
+        <default class="viz_metal_grey">
+            <geom contype="0" conaffinity="0" type="mesh" material="metal_grey" rgba=".2 .2 .25 1" mass="0" group="1"/>
+        </default>
+    </default>
+  </default>
+
+  <asset>
+    <material name="dark" rgba="0.1 0.1 0.1 1"/>
+    <mesh class="go1" file="trunk.stl"/>
+    <mesh class="go1" file="hip.stl"/>
+    <mesh class="go1" file="thigh_mirror.stl"/>
+    <mesh class="go1" file="calf.stl"/>
+    <mesh class="go1" file="thigh.stl"/>
+    <material name="metal_grey" specular=".8" shininess=".8"/>
+    <mesh name="base_link" file="/home/george/code/umi-on-legs/mani-centric-wbc/resources/robots/aliengo_description/meshes/base_link.STL"/>
+    <mesh name="link1" file="/home/george/code/umi-on-legs/mani-centric-wbc/resources/robots/aliengo_description/meshes/link1.STL"/>
+    <mesh name="link2" file="/home/george/code/umi-on-legs/mani-centric-wbc/resources/robots/aliengo_description/meshes/link2.STL"/>
+    <mesh name="link3" file="/home/george/code/umi-on-legs/mani-centric-wbc/resources/robots/aliengo_description/meshes/link3.STL"/>
+    <mesh name="link4" file="/home/george/code/umi-on-legs/mani-centric-wbc/resources/robots/aliengo_description/meshes/link4.STL"/>
+    <mesh name="link5" file="/home/george/code/umi-on-legs/mani-centric-wbc/resources/robots/aliengo_description/meshes/link5.STL"/>
+    <mesh name="link6" file="/home/george/code/umi-on-legs/mani-centric-wbc/resources/robots/aliengo_description/meshes/link6.STL"/>
+    <mesh name="one_piece_wide_grasp_finray_finger" file="/home/george/code/umi-on-legs/mani-centric-wbc/resources/robots/aliengo_description/meshes/one_piece_wide_grasp_finray_finger.obj"/>
+    <mesh name="collider" file="/home/george/code/umi-on-legs/mani-centric-wbc/resources/robots/aliengo_description/meshes/collider.obj"/>
+  </asset>
+
+
+  <include file="basic_scene.xml"/>
+  
+  <worldbody>
+    <light name="spotlight" mode="targetbodycom" target="trunk" pos="0 -1 2"/>
+    <body name="trunk" pos="0 0 0.445" childclass="go1">
+      <camera name="tracking" mode="trackcom" pos="0 -1 0.8" xyaxes="1 0 0 0 1 1"/>
+      <site name="head" pos="0.3 0 0" rgba="1 0 0 1" size="0.02" group="5"/>
+      <inertial pos="0.0223 0.002 -0.0005" quat="-0.00342088 0.705204 0.000106698 0.708996" mass="5.204"
+        diaginertia="0.0716565 0.0630105 0.0168101"/>
+      <freejoint/>
+      <geom class="visual" mesh="trunk"/>
+      <geom class="collision" size="0.125 0.04 0.057" type="box"/>
+      <geom class="collision" quat="1 0 1 0" pos="0 -0.04 0" size="0.058 0.125" type="cylinder"/>
+      <geom class="collision" quat="1 0 1 0" pos="0 +0.04 0" size="0.058 0.125" type="cylinder"/>
+      <geom class="collision" pos="0.25 0 0" size="0.005 0.06 0.05" type="box"/>
+      <geom class="collision" pos="0.25 0.06 -0.01" size="0.009 0.035"/>
+      <geom class="collision" pos="0.25 -0.06 -0.01" size="0.009 0.035"/>
+      <geom class="collision" pos="0.25 0 -0.05" size="0.01 0.06" quat="1 1 0 0"/>
+      <geom class="collision" pos="0.255 0 0.0355" size="0.021 0.052" quat="1 1 0 0"/>
+      <site name="imu" pos="0 0 0"/>
+      <body name="FR_hip" pos="0.1881 -0.04675 0">
+        <inertial pos="-0.0049166 0.00762615 -8.865e-05" quat="0.507341 0.514169 0.495027 0.482891" mass="0.68"
+          diaginertia="0.000734064 0.000468438 0.000398719"/>
+        <joint class="abduction" name="FR_hip_joint"/>
+        <geom class="visual" mesh="hip" quat="1 0 0 0"/>
+        <geom class="hip_right1"/>
+        <geom class="hip_right2"/>
+        <body name="FR_thigh" pos="0 -0.08 0">
+          <inertial pos="-0.00304722 0.019315 -0.0305004" quat="0.65243 -0.0272313 0.0775126 0.753383" mass="1.009"
+            diaginertia="0.00478717 0.00460903 0.000709268"/>
+          <joint class="hip" name="FR_thigh_joint"/>
+          <geom class="visual" mesh="thigh_mirror"/>
+          <geom class="thigh1"/>
+          <geom class="thigh2"/>
+          <geom class="thigh3"/>
+          <body name="FR_calf" pos="0 0 -0.213">
+            <inertial pos="0.00429862 0.000976676 -0.146197" quat="0.691246 0.00357467 0.00511118 0.722592"
+              mass="0.195862" diaginertia="0.00149767 0.00148468 3.58427e-05"/>
+            <joint class="knee" name="FR_calf_joint"/>
+            <geom class="visual" mesh="calf"/>
+            <geom class="calf1"/>
+            <geom class="calf2"/>
+            <geom name="FR" class="foot"/>
+            <site name="FR" pos="0 0 -0.213" type="sphere" size="0.023" group="5"/>
+          </body>
+        </body>
+      </body>
+      <body name="FL_hip" pos="0.1881 0.04675 0">
+        <inertial pos="-0.0049166 -0.00762615 -8.865e-05" quat="0.482891 0.495027 0.514169 0.507341" mass="0.68"
+          diaginertia="0.000734064 0.000468438 0.000398719"/>
+        <joint class="abduction" name="FL_hip_joint"/>
+        <geom class="visual" mesh="hip"/>
+        <geom class="hip_left1"/>
+        <geom class="hip_left2"/>
+        <body name="FL_thigh" pos="0 0.08 0">
+          <inertial pos="-0.00304722 -0.019315 -0.0305004" quat="0.753383 0.0775126 -0.0272313 0.65243" mass="1.009"
+            diaginertia="0.00478717 0.00460903 0.000709268"/>
+          <joint class="hip" name="FL_thigh_joint"/>
+          <geom class="visual" mesh="thigh"/>
+          <geom class="thigh1"/>
+          <geom class="thigh2"/>
+          <geom class="thigh3"/>
+          <body name="FL_calf" pos="0 0 -0.213">
+            <inertial pos="0.00429862 0.000976676 -0.146197" quat="0.691246 0.00357467 0.00511118 0.722592"
+              mass="0.195862" diaginertia="0.00149767 0.00148468 3.58427e-05"/>
+            <joint class="knee" name="FL_calf_joint"/>
+            <geom class="visual" mesh="calf"/>
+            <geom class="calf1"/>
+            <geom class="calf2"/>
+            <geom name="FL" class="foot"/>
+            <site name="FL" pos="0 0 -0.213" type="sphere" size="0.023" group="5"/>
+          </body>
+        </body>
+      </body>
+      <body name="RR_hip" pos="-0.1881 -0.04675 0">
+        <inertial pos="0.0049166 0.00762615 -8.865e-05" quat="0.495027 0.482891 0.507341 0.514169" mass="0.68"
+          diaginertia="0.000734064 0.000468438 0.000398719"/>
+        <joint class="abduction" name="RR_hip_joint"/>
+        <geom class="visual" quat="0 0 0 -1" mesh="hip"/>
+        <geom class="hip_right1"/>
+        <geom class="hip_right2"/>
+        <geom class="hip_right3"/>
+        <body name="RR_thigh" pos="0 -0.08 0">
+          <inertial pos="-0.00304722 0.019315 -0.0305004" quat="0.65243 -0.0272313 0.0775126 0.753383" mass="1.009"
+            diaginertia="0.00478717 0.00460903 0.000709268"/>
+          <joint class="hip" name="RR_thigh_joint"/>
+          <geom class="visual" mesh="thigh_mirror"/>
+          <geom class="thigh1"/>
+          <geom class="thigh2"/>
+          <geom class="thigh3"/>
+          <body name="RR_calf" pos="0 0 -0.213">
+            <inertial pos="0.00429862 0.000976676 -0.146197" quat="0.691246 0.00357467 0.00511118 0.722592"
+              mass="0.195862" diaginertia="0.00149767 0.00148468 3.58427e-05"/>
+            <joint class="knee" name="RR_calf_joint"/>
+            <geom class="visual" mesh="calf"/>
+            <geom class="calf1"/>
+            <geom class="calf2"/>
+            <geom name="RR" class="foot"/>
+            <site name="RR" pos="0 0 -0.213" type="sphere" size="0.023" group="5"/>
+          </body>
+        </body>
+      </body>
+      <body name="RL_hip" pos="-0.1881 0.04675 0">
+        <inertial pos="0.0049166 -0.00762615 -8.865e-05" quat="0.514169 0.507341 0.482891 0.495027" mass="0.68"
+          diaginertia="0.000734064 0.000468438 0.000398719"/>
+        <joint class="abduction" name="RL_hip_joint"/>
+        <geom class="visual" quat="0 0 1 0" mesh="hip"/>
+        <geom class="hip_left1"/>
+        <geom class="hip_left2"/>
+        <geom class="hip_left3"/>
+        <body name="RL_thigh" pos="0 0.08 0">
+          <inertial pos="-0.00304722 -0.019315 -0.0305004" quat="0.753383 0.0775126 -0.0272313 0.65243" mass="1.009"
+            diaginertia="0.00478717 0.00460903 0.000709268"/>
+          <joint class="hip" name="RL_thigh_joint"/>
+          <geom class="visual" mesh="thigh"/>
+          <geom class="thigh1"/>
+          <geom class="thigh2"/>
+          <geom class="thigh3"/>
+          <body name="RL_calf" pos="0 0 -0.213">
+            <inertial pos="0.00429862 0.000976676 -0.146197" quat="0.691246 0.00357467 0.00511118 0.722592"
+              mass="0.195862" diaginertia="0.00149767 0.00148468 3.58427e-05"/>
+            <joint class="knee" name="RL_calf_joint"/>
+            <geom class="visual" mesh="calf"/>
+            <geom class="calf1"/>
+            <geom class="calf2"/>
+            <geom name="RL" class="foot"/>
+            <site name="RL" pos="0 0 -0.213" type="sphere" size="0.023" group="5"/>
+          </body>
+        </body>
+      </body>
+
+      <body name="Piper" pos="0.0 0.0 0.07">
+        <inertial pos="-0.00979274765955341 1.82905827587138E-06 0.0410100126360189" mass="0.1625485674036938" fullinertia="0.000226596924525071 0.000269444772561524 0.000222318258878636 -7.33972270153965E-08 2.13249977802622E-06 8.15169009611054E-09"/>
+        <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.792157 0.819608 0.933333 1" mesh="base_link"/>
+        <geom type="mesh" rgba="0.792157 0.819608 0.933333 1" mesh="base_link"/>
+        <body name="link1" pos="0 0 0.123" quat="0.707105 0 0 -0.707108">
+            <inertial pos="0.00131676 0.000310289 -0.00922875" quat="0.557105 0.432155 0.377373 0.600388" mass="0.097868" diaginertia="9.25942e-05 8.3083e-05 7.69469e-05"/>
+            <joint name="joint1" pos="0 0 0" axis="0 0 1" range="-2.618 2.618" actuatorfrcrange="-100 100"/>
+            <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.792157 0.819608 0.933333 1" mesh="link1"/>
+            <geom type="mesh" rgba="0.792157 0.819608 0.933333 1" mesh="link1"/>
+            <body name="link2" quat="0.499998 0.5 -0.500002 -0.5">
+                <inertial pos="0.148794 -0.00242027 0.00175155" quat="-0.0249063 0.70684 0.00803509 0.706889" mass="0.290889" diaginertia="0.00177549 0.00173142 0.00014552"/>
+                <joint name="joint2" pos="0 0 0" axis="0 0 1" range="0 3.14" actuatorfrcrange="-100 100"/>
+                <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.792157 0.819608 0.933333 1" mesh="link2"/>
+                <geom type="mesh" rgba="0.792157 0.819608 0.933333 1" mesh="link2"/>
+                <body name="link3" pos="0.28358 0.028726 0" quat="0.998726 0 0 0.0504536">
+                <inertial pos="-0.0996835 0.0349477 0.000508026" quat="0.0777021 0.702287 -0.0990541 0.700674" mass="0.290848" diaginertia="0.000241946 0.000222224 0.000100384"/>
+                <joint name="joint3" pos="0 0 0" axis="0 0 1" range="-2.697 0" actuatorfrcrange="-100 100"/>
+                <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.792157 0.819608 0.933333 1" mesh="link3"/>
+                <geom type="mesh" rgba="0.792157 0.819608 0.933333 1" mesh="link3"/>
+                <body name="link4" pos="-0.24221 0.068514 0" quat="0.544767 -0.544769 -0.450809 0.450808">
+                    <inertial pos="0.000276465 -0.00102804 -0.00472831" quat="0.492305 0.505285 0.503294 0.499017" mass="0.127087" diaginertia="4.87057e-05 4.10595e-05 3.82001e-05"/>
+                    <joint name="joint4" pos="0 0 0" axis="0 0 1" range="-1.832 1.832" actuatorfrcrange="-100 100"/>
+                    <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.792157 0.819608 0.933333 1" mesh="link4"/>
+                    <geom type="mesh" rgba="0.792157 0.819608 0.933333 1" mesh="link4"/>
+                    <body name="link5" quat="0.707105 0.707108 0 0">
+                    <inertial pos="8.82262e-05 0.0566829 -0.0019612" quat="0.507447 0.490986 0.506887 0.494466" mass="0.144711" diaginertia="5.63237e-05 4.88652e-05 4.39642e-05"/>
+                    <joint name="joint5" pos="0 0 0" axis="0 0 1" range="-1.22 1.22" actuatorfrcrange="-100 100"/>
+                    <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.792157 0.819608 0.933333 1" mesh="link5"/>
+                    <geom type="mesh" rgba="0.792157 0.819608 0.933333 1" mesh="link5"/>
+                    <body name="link6" pos="0 0.091 0.0014165" quat="0.499998 -0.5 -0.5 -0.500002">
+                        <inertial pos="-0.00582755 0.0176267 0.0503007" quat="0.959731 -0.0741548 -0.0109947 0.270735" mass="1.09719" diaginertia="0.00644851 0.00525968 0.00240611"/>
+                        <joint name="joint6" pos="0 0 0" axis="0 0 1" range="-3.14 3.14" actuatorfrcrange="-100 100"/>
+                        <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.792157 0.819608 0.933333 1" mesh="link6"/>
+                        <geom type="mesh" rgba="0.792157 0.819608 0.933333 1" mesh="link6"/>
+                        <geom size="0.017 0.0355 0.0275" pos="-0.0200549 0.084984 0.016016" quat="0.500398 -0.5 -0.5 -0.499602" type="box" contype="0" conaffinity="0" group="1" density="0"/>
+                        <geom size="0.017 0.0355 0.0275" pos="-0.0200549 0.084984 0.016016" quat="0.500398 -0.5 -0.5 -0.499602" type="box"/>
+                        <geom pos="-0.00194266 -1.59265e-06 0.0720016" quat="0.707107 0 0 -0.707107" type="mesh" contype="0" conaffinity="0" group="1" density="0" mesh="one_piece_wide_grasp_finray_finger"/>
+                        <geom pos="-0.00194266 -1.59265e-06 0.0720016" quat="0.707388 -0.000281432 0.000281656 -0.706825" type="mesh" mesh="collider"/>
+                        <geom pos="0.00205733 1.59265e-06 0.0719984" quat="0.707107 0.0 0.0 0.707107" type="mesh" contype="0" conaffinity="0" group="1" density="0" mesh="one_piece_wide_grasp_finray_finger"/>
+                        <geom pos="0.00205733 1.59265e-06 0.0719984" quat="0.706825 0.000281656 0.000281432 0.707388" type="mesh" mesh="collider"/>
+                        <!-- <geom size="0.01" pos="0.000175192 0 0.22" quat="0.000398163 -0.000398163 1.58532e-07 -1" contype="0" conaffinity="0" group="1" density="0"/> -->
+                            <body name="end_effector" pos="0.000175192 0 0.22" quat="0.000398163 -0.000398163 1.58532e-07 -1">
+                                <inertial pos="0 0 0" quat="1 0 0 0" mass="0.1" diaginertia="0.001 0.001 0.001"/>
+                                <geom size="0.01" pos="0 0 0" quat="0 0 0 1" contype="0" conaffinity="0" group="1" density="0"/>
+                            </body>
+                    </body>
+                    </body>
+                </body>
+                </body>
+            </body>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+
+  <actuator>
+    <!-- The motor control range is -1, 1, but it is geared 1:34 -->
+    <!-- Refer to the following link for more detail on the motors: -->
+    <!-- https://shop.unitree.com/en-ca/products/unitreeyushutechnologydog-artificial-intelligence-companion-bionic-companion-intelligent-robot-go1-quadruped-robot-dog?variant=42363559641321 -->
+    <motor name="FR_hip" gear="23" joint="FR_hip_joint"/>
+    <motor name="FR_thigh" gear="23" joint="FR_thigh_joint"/>
+    <motor name="FR_calf" gear="35" joint="FR_calf_joint"/>
+    <motor name="FL_hip" gear="23" joint="FL_hip_joint"/>
+    <motor name="FL_thigh" gear="23" joint="FL_thigh_joint"/>
+    <motor name="FL_calf" gear="35" joint="FL_calf_joint"/>
+    <motor name="RR_hip" gear="23" joint="RR_hip_joint"/>
+    <motor name="RR_thigh" gear="23" joint="RR_thigh_joint"/>
+    <motor name="RR_calf" gear="35" joint="RR_calf_joint"/>
+    <motor name="RL_hip" gear="23" joint="RL_hip_joint"/>
+    <motor name="RL_thigh" gear="23" joint="RL_thigh_joint"/>
+    <motor name="RL_calf" gear="35" joint="RL_calf_joint"/>
+
+    <motor name="link1" joint="joint1" class="aliengo" ctrlrange="-20.0 20.0"/>
+    <motor name="link2" joint="joint2" class="aliengo" ctrlrange="-20.0 20.0"/>
+    <motor name="link3" joint="joint3" class="aliengo" ctrlrange="-15.0 15.0"/>
+    <motor name="link4" joint="joint4" class="aliengo" ctrlrange="-7.0 7.0"/>
+    <motor name="link5" joint="joint5" class="aliengo" ctrlrange="-5.0 5.0"/>
+    <motor name="link6" joint="joint6" class="aliengo" ctrlrange="-5.0 5.0"/>
+  </actuator>
+
+  <sensor>
+
+      <framequat     name='orientation' objtype='site' noise='0.001' objname='imu'/>
+      <framepos     name='position' objtype='site' noise='0.001' objname='imu'/>
+      <gyro          name='angular-velocity'    site='imu' noise='0.005' cutoff='34.9'/>
+      <velocimeter   name='linear-velocity'     site='imu' noise='0.001' cutoff='30'/>
+      <accelerometer name='linear-acceleration' site='imu' noise='0.005' cutoff='157'/>
+      <magnetometer  name='magnetometer'        site='imu'/>
+
+  </sensor>
+
+</mujoco>

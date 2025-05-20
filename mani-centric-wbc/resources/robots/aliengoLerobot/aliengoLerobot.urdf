@@ -1,0 +1,1458 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by
+Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="aliengoLerobot">
+
+
+  <material name="black">
+    <color rgba="0.0 0.0 0.0 1.0"/>
+  </material>
+  <material name="blue">
+    <color rgba="0.0 0.0 0.8 1.0"/>
+  </material>
+  <material name="green">
+    <color rgba="0.0 0.8 0.0 1.0"/>
+  </material>
+  <material name="grey">
+    <color rgba="0.2 0.2 0.2 1.0"/>
+  </material>
+  <material name="silver">
+    <color rgba="0.9137254901960784 0.9137254901960784 0.8470588235294118 1.0"/>
+  </material>
+  <material name="orange">
+    <color rgba="1.0 0.4235294117647059 0.0392156862745098 1.0"/>
+  </material>
+  <material name="brown">
+    <color rgba="0.8705882352941177 0.8117647058823529 0.7647058823529411 1.0"/>
+  </material>
+  <material name="red">
+    <color rgba="0.8 0.0 0.0 1.0"/>
+  </material>
+  <material name="white">
+    <color rgba="1.0 1.0 1.0 1.0"/>
+  </material>
+
+  <!-- Rotor related joint and link is only for demonstrate location. -->
+  <!-- Actually, the rotor will rotate and the joint is not fixed. Reduction ratio should be considered. -->
+  <!-- Debug mode will hung up the robot, use "true" or "false" to switch it. -->
+  <!-- <xacro:if value="$(arg DEBUG)">
+        <link name="world"/>
+        <joint name="base_static_joint" type="fixed">
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <parent link="world"/>
+            <child link="base"/>
+        </joint>
+    </xacro:if>  -->
+  <link name="base">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+  </link>
+  <joint name="floating_base" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <parent link="base"/>
+    <child link="trunk"/>
+  </joint>
+  <link name="trunk">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="resources/robots/aliengo_description/meshes/trunk.dae" scale="1 1 1"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="0.647 0.15 0.112"/>
+      </geometry>
+    </collision>
+    <!-- <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="resources/robots/aliengo_description/meshes/trunk.dae" scale="1 1 1"/>
+            </geometry>
+        </collision> -->
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.008811 0.003839 0.000273"/>
+      <mass value="11.644"/>
+      <inertia ixx="0.051944892" ixy="0.001703617" ixz="0.000235941" iyy="0.24693924" iyz="0.000119783" izz="0.270948307"/>
+    </inertial>
+  </link>
+  <joint name="imu_joint" type="fixed">
+    <parent link="trunk"/>
+    <child link="imu_link"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+  </joint>
+  <link name="imu_link">
+    <inertial>
+      <mass value="0.001"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.000001" iyz="0" izz="0.0001"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="red"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size=".001 .001 .001"/>
+      </geometry>
+    </collision>
+  </link>
+  <!--aliengo-->
+  <joint name="FR_hip_joint" type="revolute">
+    <origin rpy="0 0 0" xyz="0.2407 -0.051 0"/>
+    <parent link="trunk"/>
+    <child link="FR_hip"/>
+    <axis xyz="1 0 0"/>
+    <dynamics damping="0" friction="0"/>
+    <limit effort="35.278" lower="-1.2217304763960306" upper="1.2217304763960306" velocity="20"/>
+  </joint>
+  <joint name="FR_hip_rotor_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0.139985 -0.051 0"/>
+    <parent link="trunk"/>
+    <child link="FR_hip_rotor"/>
+  </joint>
+  <link name="FR_hip">
+    <visual>
+      <origin rpy="3.141592653589793 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="resources/robots/aliengo_description/meshes/hip.dae" scale="1 1 1"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin rpy="1.5707963267948966 0 0" xyz="0 -0.083 0"/>
+      <geometry>
+        <cylinder length="0.0418" radius="0.046"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 0" xyz="-0.022191 -0.015144 -1.5e-05"/>
+      <mass value="1.993"/>
+      <inertia ixx="0.002446735" ixy="0.00059805" ixz="1.945e-06" iyy="0.003925876" iyz="-1.284e-06" izz="0.004148145"/>
+    </inertial>
+  </link>
+  <link name="FR_hip_rotor">
+    <visual>
+      <origin rpy="0 1.5707963267948966 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.02" radius="0.035"/>
+      </geometry>
+      <material name="green"/>
+    </visual>
+    <!-- <collision>
+                <origin rpy="0 ${PI/2.0} 0" xyz="0 0 0"/>
+                <geometry>
+                    <cylinder length="0.02" radius="0.035"/>
+                </geometry>
+            </collision> -->
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
+      <mass value="0.146"/>
+      <inertia ixx="0.000138702" ixy="0.0" ixz="0.0" iyy="8.3352e-05" iyz="0.0" izz="8.3352e-05"/>
+    </inertial>
+  </link>
+  <joint name="FR_thigh_joint" type="revolute">
+    <origin rpy="0 0 0" xyz="0 -0.0868 0"/>
+    <parent link="FR_hip"/>
+    <child link="FR_thigh"/>
+    <axis xyz="0 1 0"/>
+    <dynamics damping="0" friction="0"/>
+    <limit effort="35.278" lower="-0.524" upper="3.927" velocity="20"/>
+  </joint>
+  <joint name="FR_thigh_rotor_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0.0 -0.0298 0"/>
+    <parent link="FR_hip"/>
+    <child link="FR_thigh_rotor"/>
+  </joint>
+  <link name="FR_thigh">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="resources/robots/aliengo_description/meshes/thigh_mirror.dae" scale="1 1 1"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin rpy="0 1.5707963267948966 0" xyz="0 0 -0.125"/>
+      <geometry>
+        <box size="0.25 0.0374 0.043"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 0" xyz="-0.005607 0.003877 -0.048199"/>
+      <mass value="0.639"/>
+      <inertia ixx="0.004173855" ixy="-1.0284e-05" ixz="-0.000318874" iyy="0.004343802" iyz="-0.000109233" izz="0.000340136"/>
+    </inertial>
+  </link>
+  <link name="FR_thigh_rotor">
+    <visual>
+      <origin rpy="1.5707963267948966 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.02" radius="0.035"/>
+      </geometry>
+      <material name="green"/>
+    </visual>
+    <!-- <collision>
+                <origin rpy="${PI/2.0} 0 0" xyz="0 0 0"/>
+                <geometry>
+                    <cylinder length="0.02" radius="0.035"/>
+                </geometry>
+            </collision> -->
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
+      <mass value="0.146"/>
+      <inertia ixx="8.3352e-05" ixy="0.0" ixz="0.0" iyy="0.000138702" iyz="0.0" izz="8.3352e-05"/>
+    </inertial>
+  </link>
+  <joint name="FR_calf_joint" type="revolute">
+    <origin rpy="0 0 0" xyz="0 0 -0.25"/>
+    <parent link="FR_thigh"/>
+    <child link="FR_calf"/>
+    <axis xyz="0 1 0"/>
+    <dynamics damping="0" friction="0"/>
+    <limit effort="44.4" lower="-2.775073510670984" upper="-0.6457718232379019" velocity="15.89"/>
+  </joint>
+  <joint name="FR_calf_rotor_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0.0 0.0997 0"/>
+    <parent link="FR_thigh"/>
+    <child link="FR_calf_rotor"/>
+  </joint>
+  <link name="FR_calf">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="resources/robots/aliengo_description/meshes/calf.dae" scale="1 1 1"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin rpy="0 1.5707963267948966 0" xyz="0 0 -0.125"/>
+      <geometry>
+        <box size="0.25 0.0208 0.016"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.002781 6.3e-05 -0.142518"/>
+      <mass value="0.207"/>
+      <inertia ixx="0.002129279" ixy="3.9e-08" ixz="5.757e-06" iyy="0.002141463" iyz="-5.16e-07" izz="3.7583e-05"/>
+    </inertial>
+  </link>
+  <link name="FR_calf_rotor">
+    <visual>
+      <origin rpy="1.5707963267948966 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.02" radius="0.035"/>
+      </geometry>
+      <material name="green"/>
+    </visual>
+    <!-- <collision>
+                <origin rpy="${PI/2.0} 0 0" xyz="0 0 0"/>
+                <geometry>
+                    <cylinder length="0.02" radius="0.035"/>
+                </geometry>
+            </collision> -->
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
+      <mass value="0.132"/>
+      <inertia ixx="0.000145463" ixy="0.0" ixz="0.0" iyy="0.000133031" iyz="0.0" izz="0.000145463"/>
+    </inertial>
+  </link>
+  <joint name="FR_foot_fixed" type="fixed" dont_collapse="true">
+    <origin rpy="0 0 0" xyz="0 0 -0.25"/>
+    <parent link="FR_calf"/>
+    <child link="FR_foot"/>
+  </joint>
+  <link name="FR_foot">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <sphere radius="0.0165"/>
+      </geometry>
+      <material name="green"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <sphere radius="0.0265"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.06"/>
+      <inertia ixx="1.6853999999999998e-05" ixy="0.0" ixz="0.0" iyy="1.6853999999999998e-05" iyz="0.0" izz="1.6853999999999998e-05"/>
+    </inertial>
+  </link>
+  <joint name="FL_hip_joint" type="revolute">
+    <origin rpy="0 0 0" xyz="0.2407 0.051 0"/>
+    <parent link="trunk"/>
+    <child link="FL_hip"/>
+    <axis xyz="1 0 0"/>
+    <dynamics damping="0" friction="0"/>
+    <limit effort="35.278" lower="-1.2217304763960306" upper="1.2217304763960306" velocity="20"/>
+  </joint>
+  <joint name="FL_hip_rotor_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0.139985 0.051 0"/>
+    <parent link="trunk"/>
+    <child link="FL_hip_rotor"/>
+  </joint>
+  <link name="FL_hip">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="resources/robots/aliengo_description/meshes/hip.dae" scale="1 1 1"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin rpy="1.5707963267948966 0 0" xyz="0 0.083 0"/>
+      <geometry>
+        <cylinder length="0.0418" radius="0.046"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 0" xyz="-0.022191 0.015144 -1.5e-05"/>
+      <mass value="1.993"/>
+      <inertia ixx="0.002446735" ixy="-0.00059805" ixz="1.945e-06" iyy="0.003925876" iyz="1.284e-06" izz="0.004148145"/>
+    </inertial>
+  </link>
+  <link name="FL_hip_rotor">
+    <visual>
+      <origin rpy="0 1.5707963267948966 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.02" radius="0.035"/>
+      </geometry>
+      <material name="green"/>
+    </visual>
+    <!-- <collision>
+                <origin rpy="0 ${PI/2.0} 0" xyz="0 0 0"/>
+                <geometry>
+                    <cylinder length="0.02" radius="0.035"/>
+                </geometry>
+            </collision> -->
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
+      <mass value="0.146"/>
+      <inertia ixx="0.000138702" ixy="0.0" ixz="0.0" iyy="8.3352e-05" iyz="0.0" izz="8.3352e-05"/>
+    </inertial>
+  </link>
+  <joint name="FL_thigh_joint" type="revolute">
+    <origin rpy="0 0 0" xyz="0 0.0868 0"/>
+    <parent link="FL_hip"/>
+    <child link="FL_thigh"/>
+    <axis xyz="0 1 0"/>
+    <dynamics damping="0" friction="0"/>
+    <limit effort="35.278" lower="-0.524" upper="3.927" velocity="20"/>
+  </joint>
+  <joint name="FL_thigh_rotor_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0.0 0.0298 0"/>
+    <parent link="FL_hip"/>
+    <child link="FL_thigh_rotor"/>
+  </joint>
+  <link name="FL_thigh">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="resources/robots/aliengo_description/meshes/thigh.dae" scale="1 1 1"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin rpy="0 1.5707963267948966 0" xyz="0 0 -0.125"/>
+      <geometry>
+        <box size="0.25 0.0374 0.043"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 0" xyz="-0.005607 -0.003877 -0.048199"/>
+      <mass value="0.639"/>
+      <inertia ixx="0.004173855" ixy="1.0284e-05" ixz="-0.000318874" iyy="0.004343802" iyz="0.000109233" izz="0.000340136"/>
+    </inertial>
+  </link>
+  <link name="FL_thigh_rotor">
+    <visual>
+      <origin rpy="1.5707963267948966 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.02" radius="0.035"/>
+      </geometry>
+      <material name="green"/>
+    </visual>
+    <!-- <collision>
+                <origin rpy="${PI/2.0} 0 0" xyz="0 0 0"/>
+                <geometry>
+                    <cylinder length="0.02" radius="0.035"/>
+                </geometry>
+            </collision> -->
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
+      <mass value="0.146"/>
+      <inertia ixx="8.3352e-05" ixy="0.0" ixz="0.0" iyy="0.000138702" iyz="0.0" izz="8.3352e-05"/>
+    </inertial>
+  </link>
+  <joint name="FL_calf_joint" type="revolute">
+    <origin rpy="0 0 0" xyz="0 0 -0.25"/>
+    <parent link="FL_thigh"/>
+    <child link="FL_calf"/>
+    <axis xyz="0 1 0"/>
+    <dynamics damping="0" friction="0"/>
+    <limit effort="44.4" lower="-2.775073510670984" upper="-0.6457718232379019" velocity="15.89"/>
+  </joint>
+  <joint name="FL_calf_rotor_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0.0 -0.0997 0"/>
+    <parent link="FL_thigh"/>
+    <child link="FL_calf_rotor"/>
+  </joint>
+  <link name="FL_calf">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="resources/robots/aliengo_description/meshes/calf.dae" scale="1 1 1"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin rpy="0 1.5707963267948966 0" xyz="0 0 -0.125"/>
+      <geometry>
+        <box size="0.25 0.0208 0.016"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.002781 6.3e-05 -0.142518"/>
+      <mass value="0.207"/>
+      <inertia ixx="0.002129279" ixy="3.9e-08" ixz="5.757e-06" iyy="0.002141463" iyz="-5.16e-07" izz="3.7583e-05"/>
+    </inertial>
+  </link>
+  <link name="FL_calf_rotor">
+    <visual>
+      <origin rpy="1.5707963267948966 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.02" radius="0.035"/>
+      </geometry>
+      <material name="green"/>
+    </visual>
+    <!-- <collision>
+                <origin rpy="${PI/2.0} 0 0" xyz="0 0 0"/>
+                <geometry>
+                    <cylinder length="0.02" radius="0.035"/>
+                </geometry>
+            </collision> -->
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
+      <mass value="0.132"/>
+      <inertia ixx="0.000145463" ixy="0.0" ixz="0.0" iyy="0.000133031" iyz="0.0" izz="0.000145463"/>
+    </inertial>
+  </link>
+  <joint name="FL_foot_fixed" type="fixed" dont_collapse="true">
+    <origin rpy="0 0 0" xyz="0 0 -0.25"/>
+    <parent link="FL_calf"/>
+    <child link="FL_foot"/>
+  </joint>
+  <link name="FL_foot">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <sphere radius="0.0165"/>
+      </geometry>
+      <material name="green"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <sphere radius="0.0265"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.06"/>
+      <inertia ixx="1.6853999999999998e-05" ixy="0.0" ixz="0.0" iyy="1.6853999999999998e-05" iyz="0.0" izz="1.6853999999999998e-05"/>
+    </inertial>
+  </link>
+  <joint name="RR_hip_joint" type="revolute">
+    <origin rpy="0 0 0" xyz="-0.2407 -0.051 0"/>
+    <parent link="trunk"/>
+    <child link="RR_hip"/>
+    <axis xyz="1 0 0"/>
+    <dynamics damping="0" friction="0"/>
+    <limit effort="35.278" lower="-1.2217304763960306" upper="1.2217304763960306" velocity="20"/>
+  </joint>
+  <joint name="RR_hip_rotor_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="-0.139985 -0.051 0"/>
+    <parent link="trunk"/>
+    <child link="RR_hip_rotor"/>
+  </joint>
+  <link name="RR_hip">
+    <visual>
+      <origin rpy="3.141592653589793 3.141592653589793 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="resources/robots/aliengo_description/meshes/hip.dae" scale="1 1 1"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin rpy="1.5707963267948966 0 0" xyz="0 -0.083 0"/>
+      <geometry>
+        <cylinder length="0.0418" radius="0.046"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.022191 -0.015144 -1.5e-05"/>
+      <mass value="1.993"/>
+      <inertia ixx="0.002446735" ixy="-0.00059805" ixz="-1.945e-06" iyy="0.003925876" iyz="-1.284e-06" izz="0.004148145"/>
+    </inertial>
+  </link>
+  <link name="RR_hip_rotor">
+    <visual>
+      <origin rpy="0 1.5707963267948966 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.02" radius="0.035"/>
+      </geometry>
+      <material name="green"/>
+    </visual>
+    <!-- <collision>
+                <origin rpy="0 ${PI/2.0} 0" xyz="0 0 0"/>
+                <geometry>
+                    <cylinder length="0.02" radius="0.035"/>
+                </geometry>
+            </collision> -->
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
+      <mass value="0.146"/>
+      <inertia ixx="0.000138702" ixy="0.0" ixz="0.0" iyy="8.3352e-05" iyz="0.0" izz="8.3352e-05"/>
+    </inertial>
+  </link>
+  <joint name="RR_thigh_joint" type="revolute">
+    <origin rpy="0 0 0" xyz="0 -0.0868 0"/>
+    <parent link="RR_hip"/>
+    <child link="RR_thigh"/>
+    <axis xyz="0 1 0"/>
+    <dynamics damping="0" friction="0"/>
+    <limit effort="35.278" lower="-0.524" upper="3.927" velocity="20"/>
+  </joint>
+  <joint name="RR_thigh_rotor_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0.0 -0.0298 0"/>
+    <parent link="RR_hip"/>
+    <child link="RR_thigh_rotor"/>
+  </joint>
+  <link name="RR_thigh">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="resources/robots/aliengo_description/meshes/thigh_mirror.dae" scale="1 1 1"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin rpy="0 1.5707963267948966 0" xyz="0 0 -0.125"/>
+      <geometry>
+        <box size="0.25 0.0374 0.043"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 0" xyz="-0.005607 0.003877 -0.048199"/>
+      <mass value="0.639"/>
+      <inertia ixx="0.004173855" ixy="-1.0284e-05" ixz="-0.000318874" iyy="0.004343802" iyz="-0.000109233" izz="0.000340136"/>
+    </inertial>
+  </link>
+  <link name="RR_thigh_rotor">
+    <visual>
+      <origin rpy="1.5707963267948966 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.02" radius="0.035"/>
+      </geometry>
+      <material name="green"/>
+    </visual>
+    <!-- <collision>
+                <origin rpy="${PI/2.0} 0 0" xyz="0 0 0"/>
+                <geometry>
+                    <cylinder length="0.02" radius="0.035"/>
+                </geometry>
+            </collision> -->
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
+      <mass value="0.146"/>
+      <inertia ixx="8.3352e-05" ixy="0.0" ixz="0.0" iyy="0.000138702" iyz="0.0" izz="8.3352e-05"/>
+    </inertial>
+  </link>
+  <joint name="RR_calf_joint" type="revolute">
+    <origin rpy="0 0 0" xyz="0 0 -0.25"/>
+    <parent link="RR_thigh"/>
+    <child link="RR_calf"/>
+    <axis xyz="0 1 0"/>
+    <dynamics damping="0" friction="0"/>
+    <limit effort="44.4" lower="-2.775073510670984" upper="-0.6457718232379019" velocity="15.89"/>
+  </joint>
+  <joint name="RR_calf_rotor_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0.0 0.0997 0"/>
+    <parent link="RR_thigh"/>
+    <child link="RR_calf_rotor"/>
+  </joint>
+  <link name="RR_calf">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="resources/robots/aliengo_description/meshes/calf.dae" scale="1 1 1"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin rpy="0 1.5707963267948966 0" xyz="0 0 -0.125"/>
+      <geometry>
+        <box size="0.25 0.0208 0.016"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.002781 6.3e-05 -0.142518"/>
+      <mass value="0.207"/>
+      <inertia ixx="0.002129279" ixy="3.9e-08" ixz="5.757e-06" iyy="0.002141463" iyz="-5.16e-07" izz="3.7583e-05"/>
+    </inertial>
+  </link>
+  <link name="RR_calf_rotor">
+    <visual>
+      <origin rpy="1.5707963267948966 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.02" radius="0.035"/>
+      </geometry>
+      <material name="green"/>
+    </visual>
+    <!-- <collision>
+                <origin rpy="${PI/2.0} 0 0" xyz="0 0 0"/>
+                <geometry>
+                    <cylinder length="0.02" radius="0.035"/>
+                </geometry>
+            </collision> -->
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
+      <mass value="0.132"/>
+      <inertia ixx="0.000145463" ixy="0.0" ixz="0.0" iyy="0.000133031" iyz="0.0" izz="0.000145463"/>
+    </inertial>
+  </link>
+  <joint name="RR_foot_fixed" type="fixed" dont_collapse="true">
+    <origin rpy="0 0 0" xyz="0 0 -0.25"/>
+    <parent link="RR_calf"/>
+    <child link="RR_foot"/>
+  </joint>
+  <link name="RR_foot">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <sphere radius="0.0165"/>
+      </geometry>
+      <material name="green"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <sphere radius="0.0265"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.06"/>
+      <inertia ixx="1.6853999999999998e-05" ixy="0.0" ixz="0.0" iyy="1.6853999999999998e-05" iyz="0.0" izz="1.6853999999999998e-05"/>
+    </inertial>
+  </link>
+  <joint name="RL_hip_joint" type="revolute">
+    <origin rpy="0 0 0" xyz="-0.2407 0.051 0"/>
+    <parent link="trunk"/>
+    <child link="RL_hip"/>
+    <axis xyz="1 0 0"/>
+    <dynamics damping="0" friction="0"/>
+    <limit effort="35.278" lower="-1.2217304763960306" upper="1.2217304763960306" velocity="20"/>
+  </joint>
+  <joint name="RL_hip_rotor_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="-0.139985 0.051 0"/>
+    <parent link="trunk"/>
+    <child link="RL_hip_rotor"/>
+  </joint>
+  <link name="RL_hip">
+    <visual>
+      <origin rpy="0 3.141592653589793 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="resources/robots/aliengo_description/meshes/hip.dae" scale="1 1 1"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin rpy="1.5707963267948966 0 0" xyz="0 0.083 0"/>
+      <geometry>
+        <cylinder length="0.0418" radius="0.046"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.022191 0.015144 -1.5e-05"/>
+      <mass value="1.993"/>
+      <inertia ixx="0.002446735" ixy="0.00059805" ixz="-1.945e-06" iyy="0.003925876" iyz="1.284e-06" izz="0.004148145"/>
+    </inertial>
+  </link>
+  <link name="RL_hip_rotor">
+    <visual>
+      <origin rpy="0 1.5707963267948966 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.02" radius="0.035"/>
+      </geometry>
+      <material name="green"/>
+    </visual>
+    <!-- <collision>
+                <origin rpy="0 ${PI/2.0} 0" xyz="0 0 0"/>
+                <geometry>
+                    <cylinder length="0.02" radius="0.035"/>
+                </geometry>
+            </collision> -->
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
+      <mass value="0.146"/>
+      <inertia ixx="0.000138702" ixy="0.0" ixz="0.0" iyy="8.3352e-05" iyz="0.0" izz="8.3352e-05"/>
+    </inertial>
+  </link>
+  <joint name="RL_thigh_joint" type="revolute">
+    <origin rpy="0 0 0" xyz="0 0.0868 0"/>
+    <parent link="RL_hip"/>
+    <child link="RL_thigh"/>
+    <axis xyz="0 1 0"/>
+    <dynamics damping="0" friction="0"/>
+    <limit effort="35.278"  lower="-0.524" upper="3.927" velocity="20"/>
+  </joint>
+  <joint name="RL_thigh_rotor_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0.0 0.0298 0"/>
+    <parent link="RL_hip"/>
+    <child link="RL_thigh_rotor"/>
+  </joint>
+  <link name="RL_thigh">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="resources/robots/aliengo_description/meshes/thigh.dae" scale="1 1 1"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin rpy="0 1.5707963267948966 0" xyz="0 0 -0.125"/>
+      <geometry>
+        <box size="0.25 0.0374 0.043"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 0" xyz="-0.005607 -0.003877 -0.048199"/>
+      <mass value="0.639"/>
+      <inertia ixx="0.004173855" ixy="1.0284e-05" ixz="-0.000318874" iyy="0.004343802" iyz="0.000109233" izz="0.000340136"/>
+    </inertial>
+  </link>
+  <link name="RL_thigh_rotor">
+    <visual>
+      <origin rpy="1.5707963267948966 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.02" radius="0.035"/>
+      </geometry>
+      <material name="green"/>
+    </visual>
+    <!-- <collision>
+                <origin rpy="${PI/2.0} 0 0" xyz="0 0 0"/>
+                <geometry>
+                    <cylinder length="0.02" radius="0.035"/>
+                </geometry>
+            </collision> -->
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
+      <mass value="0.146"/>
+      <inertia ixx="8.3352e-05" ixy="0.0" ixz="0.0" iyy="0.000138702" iyz="0.0" izz="8.3352e-05"/>
+    </inertial>
+  </link>
+  <joint name="RL_calf_joint" type="revolute">
+    <origin rpy="0 0 0" xyz="0 0 -0.25"/>
+    <parent link="RL_thigh"/>
+    <child link="RL_calf"/>
+    <axis xyz="0 1 0"/>
+    <dynamics damping="0" friction="0"/>
+    <limit effort="44.4" lower="-2.775073510670984" upper="-0.6457718232379019" velocity="15.89"/>
+  </joint>
+  <joint name="RL_calf_rotor_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0.0 -0.0997 0"/>
+    <parent link="RL_thigh"/>
+    <child link="RL_calf_rotor"/>
+  </joint>
+  <link name="RL_calf">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="resources/robots/aliengo_description/meshes/calf.dae" scale="1 1 1"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin rpy="0 1.5707963267948966 0" xyz="0 0 -0.125"/>
+      <geometry>
+        <box size="0.25 0.0208 0.016"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.002781 6.3e-05 -0.142518"/>
+      <mass value="0.207"/>
+      <inertia ixx="0.002129279" ixy="3.9e-08" ixz="5.757e-06" iyy="0.002141463" iyz="-5.16e-07" izz="3.7583e-05"/>
+    </inertial>
+  </link>
+  <link name="RL_calf_rotor">
+    <visual>
+      <origin rpy="1.5707963267948966 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.02" radius="0.035"/>
+      </geometry>
+      <material name="green"/>
+    </visual>
+    <!-- <collision>
+                <origin rpy="${PI/2.0} 0 0" xyz="0 0 0"/>
+                <geometry>
+                    <cylinder length="0.02" radius="0.035"/>
+                </geometry>
+            </collision> -->
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
+      <mass value="0.132"/>
+      <inertia ixx="0.000145463" ixy="0.0" ixz="0.0" iyy="0.000133031" iyz="0.0" izz="0.000145463"/>
+    </inertial>
+  </link>
+  <joint name="RL_foot_fixed" type="fixed" dont_collapse="true">
+    <origin rpy="0 0 0" xyz="0 0 -0.25"/>
+    <parent link="RL_calf"/>
+    <child link="RL_foot"/>
+  </joint>
+  <link name="RL_foot">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <sphere radius="0.0165"/>
+      </geometry>
+      <material name="green"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <sphere radius="0.0265"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.06"/>
+      <inertia ixx="1.6853999999999998e-05" ixy="0.0" ixz="0.0" iyy="1.6853999999999998e-05" iyz="0.0" izz="1.6853999999999998e-05"/>
+    </inertial>
+  </link>
+
+
+  <!--arm-->
+  <joint name="trunk_arm_joint" type="fixed">
+      <origin rpy="1.57 0.0 0.0" xyz="0.085 0 0.094" />
+      <parent link="base" />
+      <child link="base_arm_link" />
+  </joint>
+  <link
+    name="base_arm_link">
+    <inertial>
+      <origin
+        xyz="0.0195624606184725 -0.0295895597276446 -2.76876897655451E-06"
+        rpy="0 0 0" />
+      <mass
+        value="0.184098970814929" />
+      <inertia
+        ixx="0.000142288448859702"
+        ixy="-2.26169251313517E-05"
+        ixz="4.23610978246252E-09"
+        iyy="0.00016758363588302"
+        iyz="-2.10119213746261E-08"
+        izz="0.000135962602722997" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="resources/robots/SO_ARM100_description/meshes/Base.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="resources/robots/SO_ARM100_description/meshes/Base.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="link1">
+    <inertial>
+      <origin
+        xyz="-0.013299 0.079753 0.035058"
+        rpy="0 0 0" />
+      <mass
+        value="0.092914" />
+      <inertia
+        ixx="5.0472E-05"
+        ixy="-6.879E-06"
+        ixz="3.3863E-07"
+        iyy="2.252E-05"
+        iyz="5.9775E-07"
+        izz="5.4357E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="resources/robots/SO_ARM100_description/meshes/Shoulder_Pitch_Yaw.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="resources/robots/SO_ARM100_description/meshes/Shoulder_Pitch_Yaw.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint1"
+    type="revolute">
+    <origin
+      xyz="0.01 0 0"
+      rpy="-1.5708 0 -1.5723" />
+    <parent
+      link="base_arm_link" />
+    <child
+      link="link1" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      lower="-1"
+      upper="3"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="link2">
+    <inertial>
+      <origin
+        xyz="-0.045255 0.0065486 0.04097"
+        rpy="0 0 0" />
+      <mass
+        value="0.21817" />
+      <inertia
+        ixx="9.4379E-05"
+        ixy="1.3581E-05"
+        ixz="2.8938E-05"
+        iyy="0.00021514"
+        iyz="-3.2154E-06"
+        izz="0.00014492" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="resources/robots/SO_ARM100_description/meshes/Upper_Humeral.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="resources/robots/SO_ARM100_description/meshes/Upper_Humeral.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint2"
+    type="revolute">
+    <origin
+      xyz="-0.002 0.123 0"
+      rpy="-0.00019451 1.2429E-05 0.12763" />
+    <parent
+      link="link1" />
+    <child
+      link="link2" />
+    <axis
+      xyz="0.0015282 0 -1" />
+    <limit
+      lower="-1"
+      upper="0"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="link3">
+    <inertial>
+      <origin
+        xyz="-0.072262 0.021725 -0.0207"
+        rpy="0 0 0" />
+      <mass
+        value="0.16611" />
+      <inertia
+        ixx="5.0858E-05"
+        ixy="1.3362E-05"
+        ixz="-2.4207E-06"
+        iyy="0.00013739"
+        iyz="2.7097E-06"
+        izz="0.00013639" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="resources/robots/SO_ARM100_description/meshes/Humeral_Elbow.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="resources/robots/SO_ARM100_description/meshes/Humeral_Elbow.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint3"
+    type="revolute">
+    <origin
+      xyz="-0.090614 0.016864 0.034762"
+      rpy="-0.53649 0.06528 -0.018789" />
+    <parent
+      link="link2" />
+    <child
+      link="link3" />
+    <axis
+      xyz="0.99187 -0.12728 0.0015157" />
+    <limit
+      lower="-1.8"
+      upper="1.8"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="link4">
+    <inertial>
+      <origin
+        xyz="-0.02921 0.0068798 0.0036776"
+        rpy="0 0 0" />
+      <mass
+        value="0.074077" />
+      <inertia
+        ixx="3.2764E-05"
+        ixy="-2.3726E-06"
+        ixz="-2.325E-06"
+        iyy="1.9912E-05"
+        iyz="-1.1135E-05"
+        izz="3.1909E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="resources/robots/SO_ARM100_description/meshes/Forearm.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="resources/robots/SO_ARM100_description/meshes/Forearm.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint4"
+    type="revolute">
+    <origin
+      xyz="-0.10713 0.0094948 0.0068692"
+      rpy="0.0028871 0.021537 0.013065" />
+    <parent
+      link="link3" />
+    <child
+      link="link4" />
+    <axis
+      xyz="0.10838 0.8507 0.51436" />
+    <limit
+      lower="-3"
+      upper="0"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="link5">
+    <inertial>
+      <origin
+        xyz="-0.053889 0.0079735 -0.00086939"
+        rpy="0 0 0" />
+      <mass
+        value="0.091826" />
+      <inertia
+        ixx="1.7943E-05"
+        ixy="1.5108E-06"
+        ixz="-1.3157E-06"
+        iyy="3.104E-05"
+        iyz="-2.7449E-06"
+        izz="2.922E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="resources/robots/SO_ARM100_description/meshes/Wrist_Roll_Yaw.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="resources/robots/SO_ARM100_description/meshes/Wrist_Roll_Yaw.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint5"
+    type="revolute">
+    <origin
+      xyz="-0.058273 0.0045968 0.0025376"
+      rpy="2.7435 -0.099808 -0.26118" />
+    <parent
+      link="link4" />
+    <child
+      link="link5" />
+    <axis
+      xyz="0.98986 -0.14016 0.023243" />
+    <limit
+      lower="-1.8"
+      upper="1.8"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="link6">
+    <inertial>
+      <origin
+        xyz="2.7756E-17 0.0024 0.0045832"
+        rpy="0 0 0" />
+      <mass
+        value="0.023922" />
+      <inertia
+        ixx="8.3081E-06"
+        ixy="6.951E-21"
+        ixz="-4.473E-21"
+        iyy="1.0623E-05"
+        iyz="-8.225E-21"
+        izz="1.3498E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="resources/robots/SO_ARM100_description/meshes/Wrist_Yaw_Pitch.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="resources/robots/SO_ARM100_description/meshes/Wrist_Yaw_Pitch.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint6"
+    type="revolute">
+    <origin
+      xyz="-0.094575 0.013474 -0.0022794"
+      rpy="1.5994 -0.62299 -1.7282" />
+    <parent
+      link="link5" />
+    <child
+      link="link6" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      lower="-0.9"
+      upper="0.5"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="link7">
+    <inertial>
+      <origin
+        xyz="-0.012801 -1.9931E-09 0.00037293"
+        rpy="0 0 0" />
+      <mass
+        value="0.036217" />
+      <inertia
+        ixx="5.0606E-06"
+        ixy="-1.1965E-12"
+        ixz="7.0946E-08"
+        iyy="9.3616E-06"
+        iyz="1.0572E-12"
+        izz="7.8391E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="resources/robots/SO_ARM100_description/meshes/End_Servo.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="resources/robots/SO_ARM100_description/meshes/End_Servo.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint7"
+    type="revolute">
+    <origin
+      xyz="0 0.0024 0.025"
+      rpy="0 1.5708 0" />
+    <parent
+      link="link6" />
+    <child
+      link="link7" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-1.8"
+      upper="1.8"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+      name="link8">
+      <inertial>
+          <origin
+              xyz="0.05435277 -0.00734005 0.01881196"
+              rpy="0 0 0" />
+          <mass value="0.902" />
+          <inertia
+              ixx="0.00229822"
+              ixy="1.254e-4"
+              ixz="-0.00037442"
+              iyy="0.00596005"
+              iyz="0.00054471"
+              izz="0.00530799" />
+      </inertial>
+      <visual>
+          <origin
+              xyz="0 0 0"
+              rpy="0.0 0 0" />
+          <geometry>
+              <mesh
+                  filename="resources/robots/go2_arx5/arx5_meshes/link6_truncated.stl" />
+          </geometry>
+          <material
+              name="">
+              <color
+                  rgba="0.898039215686275 0.917647058823529 0.929411764705882 1" />
+          </material>
+      </visual>
+      <collision>
+          <origin
+              xyz="0 0 0"
+              rpy="1.57079632679 0 0" />
+          <geometry>
+              <mesh
+                  filename="resources/robots/go2_arx5/arx5_meshes/link6_truncated.stl" />
+          </geometry>
+          <material
+              name="">
+              <color
+                  rgba="0.898039215686275 0.917647058823529 0.929411764705882 1" />
+          </material>
+      </collision>
+      <!-- go pro -->
+      <visual>
+          <origin xyz="0.016 -0.02 0.085" rpy="0 0 0" />
+          <geometry>
+              <box size="0.034 0.071 0.055" />
+          </geometry>
+      </visual>
+      <collision>
+          <origin xyz="0.016 -0.02 0.085" rpy="0 0 0" />
+          <geometry>
+              <box size="0.034 0.071 0.055" />
+          </geometry>
+      </collision>
+      <!-- left finger -->
+      <visual>
+          <origin xyz="0.072 -0.002 0" rpy="0 1.57079632679 1.57079632679" />
+          <geometry>
+              <mesh
+                  filename="resources/robots/go2_arx5/arx5_meshes/one_piece_wide_grasp_finray_finger.obj" />
+          </geometry>
+      </visual>
+      <collision>
+          <origin xyz="0.072 -0.002 0" rpy="0 1.57079632679 0.0" />
+          <geometry>
+              <mesh
+                  filename="resources/robots/go2_arx5/arx5_meshes/collider.obj" />
+          </geometry>
+      </collision>
+      <!-- right finger -->
+      <visual>
+          <origin xyz="0.072 0.002 0" rpy="0 -1.57079632679 1.57079632679" />
+          <geometry>
+              <mesh
+                  filename="resources/robots/go2_arx5/arx5_meshes/one_piece_wide_grasp_finray_finger.obj" />
+          </geometry>
+      </visual>
+      <collision>
+          <origin xyz="0.072 0.002 0" rpy="3.14159265359 -1.57079632679 0.0" />
+          <geometry>
+              <mesh
+                  filename="resources/robots/go2_arx5/arx5_meshes/collider.obj" />
+          </geometry>
+      </collision>
+  </link>
+  <joint
+      name="joint8"
+      type="revolute">
+      <dynamics damping="0.0" friction="0.0" />
+      <origin
+          xyz="0 0 0"
+          rpy="-3.14 3.14 0" />
+      <parent
+          link="link7" />
+      <child
+          link="link8" />
+      <axis
+          xyz="1 0 0" />
+      <limit
+          lower="-1.57079632679"
+          upper="1.57079632679"
+          effort="30"
+          velocity="10" />
+  </joint>
+  <link name="end_effector">
+      <visual>
+          <geometry>
+              <sphere radius="0.01" />
+          </geometry>
+      </visual>
+      <inertial>
+          <mass value="0.0" />
+      </inertial>
+  </link>
+  <joint name="ee_gripper" type="fixed" dont_collapse="true">
+      <origin
+          xyz="0.22 0 0"
+          rpy="-1.57079632679 0 -1.57079632679" />
+      <parent
+          link="link8" />
+      <child
+          link="end_effector" />
+  </joint>
+  <joint name="FR_foot_target_joint"
+      type="fixed" dont_collapse="true">
+      <origin xyz="0.35 -0.20 0" rpy="0 0 0" />
+      <parent link="base" />
+      <child link="FR_foot_target" />
+  </joint>
+  <link name="FR_foot_target">
+  </link>
+  <joint name="FL_foot_target_joint"
+      type="fixed" dont_collapse="true">
+      <origin xyz="0.35 0.20 0" rpy="0 0 0" />
+      <parent link="base" />
+      <child link="FL_foot_target" />
+  </joint>
+  <link name="FL_foot_target">
+  </link>
+  <joint name="RR_foot_target_joint"
+      type="fixed" dont_collapse="true">
+      <origin xyz="-0.20 -0.20 0" rpy="0 0 0" />
+      <parent link="base" />
+      <child link="RR_foot_target" />
+  </joint>
+  <link name="RR_foot_target">
+  </link>
+  <joint name="RL_foot_target_joint"
+      type="fixed" dont_collapse="true">
+      <origin xyz="-0.20 0.20 0" rpy="0 0 0" />
+      <parent link="base" />
+      <child link="RL_foot_target" />
+  </joint>
+  <link name="RL_foot_target">
+  </link>
+
+</robot>

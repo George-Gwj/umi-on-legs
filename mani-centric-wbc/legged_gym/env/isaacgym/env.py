@@ -277,7 +277,8 @@ class IsaacGymEnv(VecEnv):
 
     def reset(self):
         """Reset all robots"""
-        self.reset_idx(torch.arange(self.num_envs, device=self.device))
+        env_ids = torch.arange(self.num_envs, device=self.device)
+        self.reset_idx(env_ids)
         obs, privileged_obs, _, _, _ = self.step(
             torch.zeros(
                 self.num_envs, self.num_actions, device=self.device, requires_grad=False
@@ -861,7 +862,7 @@ class IsaacGymEnv(VecEnv):
         return props
 
     def _reset_root_states(self, env_ids):
-        # base position
+        """Reset root states of the robot"""
         self.state.root_state[env_ids] = self.base_init_state
         if (self.init_pos_noise > 0).any():
             self.state.root_state[env_ids, 0:3] += torch_rand_float(
@@ -963,6 +964,15 @@ class IsaacGymEnv(VecEnv):
         robot_asset = self.gym.load_asset(
             self.sim, asset_root, asset_file, asset_options
         )
+
+        # 添加障碍物 Asset（例如一个 0.3x0.3x0.3 的立方体）
+        obstacle_size = 0.3
+        obstacle_asset = self.gym.create_box(
+            self.sim, obstacle_size, obstacle_size, obstacle_size, gymapi.AssetOptions()
+        )
+
+
+
         self.num_dof = self.gym.get_asset_dof_count(robot_asset)
         self.num_bodies = self.gym.get_asset_rigid_body_count(robot_asset)
         dof_props_asset = self.gym.get_asset_dof_properties(robot_asset)
@@ -1138,6 +1148,8 @@ class IsaacGymEnv(VecEnv):
         )
         self.actor_handles = []
         self.envs = []
+        self.obstacle_handles = []
+
 
         for i in range(self.num_envs):
             # create env instance
@@ -1162,6 +1174,7 @@ class IsaacGymEnv(VecEnv):
                 self.cfg.asset.self_collisions,
                 0,
             )
+
             dof_props = self._process_dof_props(dof_props_asset, i)
             self.gym.set_actor_dof_properties(env_handle, actor_handle, dof_props)
             body_props = self.gym.get_actor_rigid_body_properties(
@@ -1171,8 +1184,27 @@ class IsaacGymEnv(VecEnv):
             self.gym.set_actor_rigid_body_properties(
                 env_handle, actor_handle, body_props, recomputeInertia=True
             )
+
+
             self.envs.append(env_handle)
             self.actor_handles.append(actor_handle)
+
+            # add obstacle to the environment
+            obstacle_pose = gymapi.Transform()
+            obstacle_pose.p = gymapi.Vec3(
+                self.env_origins[i, 0].item() + 1.0,
+                self.env_origins[i, 1].item(),
+                obstacle_size / 2.0
+            )
+            obstacle_handle = self.gym.create_actor(
+                env_handle,
+                obstacle_asset,
+                obstacle_pose,
+                f"obstacle_{i}",
+                0, 0, 0,
+            )
+            self.obstacle_handles.append(obstacle_handle)
+
 
         self.termination_contact_indices = torch.zeros(
             len(termination_contact_names),
@@ -1266,7 +1298,8 @@ class IsaacGymEnv(VecEnv):
         self.state.dof_vel[env_ids] = 0.0
         self.state.prev_dof_vel[env_ids] = 0.0
 
-        env_ids_int32 = env_ids.to(dtype=torch.int32)
+        # env_ids_int32 = env_ids.to(dtype=torch.int32)
+        env_ids_int32 = 2 * env_ids.clone().to(dtype=torch.int32)
         self.gym.set_dof_state_tensor_indexed(
             self.sim,
             gymtorch.unwrap_tensor(
